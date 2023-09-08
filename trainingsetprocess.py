@@ -5,20 +5,22 @@ import csv
 import os
 
 
+def check_files_exist(base_path, *filenames):
+    return all(os.path.isfile(os.path.join(base_path, fname)) for fname in filenames)
 
 def trainset_process(flag):
-    # 如果fitness_poses_csvs_out文件夹下的push_down.csv和push_up.csv已经存在，则不用导入样本图片再训练了
-    if flag == 1:
-        if os.path.isfile(os.path.join(os.path.dirname(__file__),'fitness_poses_csvs_out\push_up.csv')) and os.path.isfile(os.path.join(os.path.dirname(__file__),'fitness_poses_csvs_out\push_down.csv')):
-            return
-    # 如果fitness_poses_csvs_out文件夹下的squat_down.csv和squat_up.csv已经存在，则不用导入样本图片再训练了
-    elif flag == 2:
-        if os.path.isfile(os.path.join(os.path.dirname(__file__),'fitness_poses_csvs_out\squat_up.csv')) and os.path.isfile(os.path.join(os.path.dirname(__file__),'fitness_poses_csvs_out\squat_down.csv')):
-            return
-    # 如果fitness_poses_csvs_out文件夹下的pull_down.csv和pull_up.csv已经存在，则不用导入样本图片再训练了
-    elif flag == 3:
-        if os.path.isfile(os.path.join(os.path.dirname(__file__),'fitness_poses_csvs_out\pull_up.csv')) and os.path.isfile(os.path.join(os.path.dirname(__file__),'fitness_poses_csvs_out\pull_down.csv')):
-            return
+    # Determine the base directory
+    base_dir = os.path.join(os.path.dirname(__file__), 'fitness_poses_csvs_out')
+
+    # Check the files based on the flag
+    files_to_check = {
+        1: ('push_up.csv', 'push_down.csv'),
+        2: ('squat_up.csv', 'squat_down.csv'),
+        3: ('pull_up.csv', 'pull_down.csv')
+    }
+
+    if flag in files_to_check and check_files_exist(base_dir, *files_to_check[flag]):
+        return
 
     # 指定样本图片的路径
     bootstrap_images_in_folder = 'fitness_poses_images_in'
